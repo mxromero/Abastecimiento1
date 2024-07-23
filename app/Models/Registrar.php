@@ -12,10 +12,12 @@ class Registrar extends Model
     protected $table = 'users';
 
     protected $fillable = [
+        'rut',
         'name',
+        'descripcion',
         'email',
         'password',
-        'role',
+        'role_id',
     ];
 
 

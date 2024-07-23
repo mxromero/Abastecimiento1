@@ -316,6 +316,7 @@ return [
             'text' => 'Registrar',
             'url' => 'admin/settings',
             'icon' => 'fas fa-address-book',
+            'can'     => 'admin-only',
         ],        
         [
             'text' => 'Notas Recepción',

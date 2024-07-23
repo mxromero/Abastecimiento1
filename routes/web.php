@@ -42,7 +42,7 @@ Route::middleware('auth')->group(function () {
     //Rutas Administrador
     Route::middleware(['auth','admin'])->prefix('admin')->group(function(){
         Route::get('/settings', [RegistroController::class, 'index'])->name('register');
-        Route::post('/settings', [RegistroController::class, 'registrar'])->name('register.store');
+        Route::post('/settings', [RegistroController::class, 'store'])->name('register.store');
     });
 
 
