@@ -22,7 +22,7 @@ class NotasController extends Controller
         $anio = date('Y');
         $mes = date('m');
         $productor = Auth::user()->descripcion;
-        $mesActual = Carbon::now()->locale('es')->isoFormat('MMMM');
+        $mesActual = ucfirst(Carbon::now()->locale('es')->isoFormat('MMMM'));
         $totalKilos = 0;
 
         $rutaBase = env('PDF_BASE_PATH');
@@ -93,7 +93,7 @@ class NotasController extends Controller
         $anio = $fechaActual->year;
         $mes = str_pad($fechaActual->month,2 ,'0', STR_PAD_LEFT);
 
-        $mesActual = $fechaActual->locale('es')->isoFormat('MMMM');
+        $mesActual = ucfirst($fechaActual->locale('es')->isoFormat('MMMM'));
         $totalKilos = 0;
 
         $anios = array_diff(scandir($rutaBase), ['..', '.']);
