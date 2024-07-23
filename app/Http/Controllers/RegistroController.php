@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Registrar;
 use App\Models\Role;
+use App\Notifications\UserRegistered;
 use Illuminate\Http\Request;
+use Illuminate\Notifications\Notification;
 
 
 class RegistroController extends Controller
@@ -32,8 +34,9 @@ class RegistroController extends Controller
         $validatedData['password'] = bcrypt($validatedData['password']);
 
         // Crear un nuevo registro
-        Registrar::create($validatedData);
+        $user = Registrar::create($validatedData);
 
+        Notification::route('mail', $user->email)->notify(new UserRegistered($user));
 
         // Redirigir o devolver una respuesta
         return redirect()->route('dashboard')->with('success', 'Registro creado exitosamente');
