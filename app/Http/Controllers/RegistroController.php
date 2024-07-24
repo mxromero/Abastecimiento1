@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Registrar;
-use App\Models\Role;
 use App\Notifications\UserRegistered;
 use Illuminate\Http\Request;
-use Illuminate\Notifications\Notification;
+use App\Models\Role; 
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Str;
 
 
 class RegistroController extends Controller
@@ -14,8 +15,9 @@ class RegistroController extends Controller
     //
 
     public function index(){
-        $roles = Role::all();
-        return view('auth.register',compact('roles'));
+
+        $roles = Role::all(); // Obtén todos los roles
+        return view('auth.register', compact('roles'));
     }
 
     public function store(Request $request)
@@ -26,17 +28,19 @@ class RegistroController extends Controller
             'rut' => 'required|string|max:20|unique:users,rut',
             'descripcion' => 'nullable|string|max:1000',
             'email' => 'required|string|email|max:255|unique:users,email',
-            'password' => 'required|string|min:8|confirmed',
             'role_id' => 'required|exists:roles,id', // Asumiendo que tienes una tabla roles
         ]);
 
+           // Generar una contraseña temporal
+        $temporaryPassword = Str::random(10);
             // Hash la contraseña antes de guardar
-        $validatedData['password'] = bcrypt($validatedData['password']);
+        $validatedData['password'] = //bcrypt($validatedData['password']);
+        $validatedData['password_confirmation'] = true;
 
         // Crear un nuevo registro
         $user = Registrar::create($validatedData);
 
-        Notification::route('mail', $user->email)->notify(new UserRegistered($user));
+        Notification::route('mail', $user->email)->notify(new UserRegistered($user, $temporaryPassword));
 
         // Redirigir o devolver una respuesta
         return redirect()->route('dashboard')->with('success', 'Registro creado exitosamente');

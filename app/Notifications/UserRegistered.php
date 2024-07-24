@@ -12,13 +12,15 @@ class UserRegistered extends Notification
     use Queueable;
 
     protected $user;
+    protected $temporaryPassword;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct($user)
+    public function __construct($user, $temporaryPassword)
     {
         $this->user = $user;
+        $this->temporaryPassword = $temporaryPassword;
     }
 
     /**
@@ -37,13 +39,16 @@ class UserRegistered extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->subject('Bienvenido a la aplicación')
+                    ->subject('Bienvenido a Portal Productores')
                     ->greeting('Hola ' . $this->user->name)
-                    ->line('Se ha creado un nuevo usuario en la aplicación de productores con los siguientes datos.')
+                    ->line('¡Bienvenido a nuestra comunidad de productores! Nos complace informarle que su perfil ha sido creado exitosamente en nuestro portal de productores.')
+                    ->line('Con los siguientes datos:')
                     ->line('Nombre: ' . $this->user->name)
                     ->line('RUT: ' . $this->user->rut)
-                    ->line('email: ' . $this->user->email)
-                    ->line('Gracias por usar nuestro portal!');
+                    ->line('Email: ' . $this->user->email)
+                    ->line('Contraseña temporal: ' . $this->temporaryPassword)
+                    ->line('Por favor, cambie su contraseña la primera vez que inicie sesión.')
+                    ->line('Esperamos que disfrute de esta plataforma y estamos a su disposición para cualquier consulta.');
     }
 
     /**

@@ -4,6 +4,7 @@ use App\Http\Controllers\ControllerDescargaPdf;
 use App\Http\Controllers\NotasController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegistroController;
+use App\Http\Controllers\PasswordChangeController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -37,6 +38,10 @@ Route::middleware('auth')->group(function () {
 
     //Rutas Descarga PDF
     Route::get('/descargarPdf/{rut}/{anio}/{mes}/{filename}', [ControllerDescargaPdf::class, 'descargarPdf'])->name('descargar.pdf');
+
+    //Cambio de Contraseña
+    Route::get('password/change', [PasswordChangeController::class, 'showChangeForm'])->name('password.change');
+    Route::post('password/change', [PasswordChangeController::class, 'change']);
 });
 
     //Rutas Administrador

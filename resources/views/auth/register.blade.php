@@ -18,7 +18,7 @@
         <!-- Rut -->
         <div>
             <x-input-label for="rut" :value="__('Rut')" />
-            <x-text-input for="rut" class="block mt-1 w-full" type="text" name="rut" :value="old('rut')" required autofocus autocomplete="rut"/>
+            <x-text-input for="rut" class="block mt-1 w-full" type="text" name="rut" :value="old('rut')" required autofocus autocomplete="rut" placeholder="11111111-1"/>
             <x-input-error :messages="$errors->get('rut')" class="mt-2" />
         </div>
         <div class="mt-4">

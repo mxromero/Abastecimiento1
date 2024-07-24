@@ -85,6 +85,7 @@ class NotasController extends Controller
 
     public function HistorialNotaRecepcion($mesOffset = 1) // <-- Añadimos un parámetro opcional
     {
+      
         $rut = Auth::user()->rut;
         $rutaBase = env('PDF_BASE_PATH') . $rut . '\\'; 
 
