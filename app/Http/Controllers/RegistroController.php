@@ -6,6 +6,7 @@ use App\Models\Registrar;
 use App\Notifications\UserRegistered;
 use Illuminate\Http\Request;
 use App\Models\Role; 
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 
@@ -34,7 +35,7 @@ class RegistroController extends Controller
            // Generar una contraseña temporal
         $temporaryPassword = Str::random(10);
             // Hash la contraseña antes de guardar
-        $validatedData['password'] = //bcrypt($validatedData['password']);
+        $validatedData['password'] = Hash::make($temporaryPassword);
         $validatedData['password_confirmation'] = true;
 
         // Crear un nuevo registro
