@@ -299,14 +299,16 @@ return [
             'type' => 'fullscreen-widget',
             'topnav_right' => true,
         ],
-
+    
         // Sidebar items:
         [
-            'text' => 'blog',
-            'url' => 'admin/blog',
-            'can' => 'manage-blog',
+            'text' => 'Dashboard',
+            'url' => 'dashboard',
+            'icon' => 'fas fa-tachometer-alt',
         ],
-        ['header' => 'account_settings'],
+        [
+            'header' => 'CONFIGURACIÓN CUENTA'
+        ],
         [
             'text' => 'Perfil',
             'url' => 'profile',
@@ -316,10 +318,19 @@ return [
             'text' => 'Registrar',
             'url' => 'admin/settings',
             'icon' => 'fas fa-address-book',
-            'can'     => 'admin-only',
-        ],        
+            'can' => 'admin-only',
+        ],
         [
-            'text' => 'Notas Recepción',
+            'text' => 'Usuarios',
+            'url' => 'admin/users',
+            'icon' => 'fas fa-users',
+            'can' => 'admin-only',
+        ],
+        [
+            'header' => 'NOTAS DE RECEPCIÓN'
+        ],
+        [
+            'text' => 'Recepciones',
             'icon' => 'fas fa-file',
             'submenu' => [
                 [
@@ -329,7 +340,7 @@ return [
                 ],
                 [
                     'text' => 'Mes Anterior',
-                    'icon' => 'fas fa-angle-double-left',                    
+                    'icon' => 'fas fa-angle-double-left',
                     'url' => 'notas/mesanterior',
                 ],
             ],

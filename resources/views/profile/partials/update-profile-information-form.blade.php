@@ -24,16 +24,12 @@
         </div>
 
         <div>
-            <x-input-label for="name" :value="__('Nombre Usuario')" />
+            <x-input-label for="name" :value="__('Nombre Proveedor')" />
             <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required  autocomplete="name" readonly />
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
 
-        <div>
-            <x-input-label for="descripcion" :value="__('Descripcion')"/>
-            <x-text-input id="descripcion" name="descripcion" text="text" class="mt-1 block w-full" :value="old('descripcion', $user->descripcion)" requiered aria-autocomplete="descripcion" readonly />
-            <x-input-error class="mt-2" :messages="$errors->get('descripcion')" />
-        </div>
+
 
         <div>
             <x-input-label for="email" :value="__('Correo')" />

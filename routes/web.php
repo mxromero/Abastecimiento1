@@ -5,6 +5,8 @@ use App\Http\Controllers\NotasController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegistroController;
 use App\Http\Controllers\PasswordChangeController;
+use App\Http\Controllers\UsuariosController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
@@ -16,7 +18,8 @@ Route::get('/', function () {
 
 //Dashboard
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $user = Auth::user();
+    return view('dashboard', compact('user'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 
@@ -48,6 +51,13 @@ Route::middleware('auth')->group(function () {
     Route::middleware(['auth','admin'])->prefix('admin')->group(function(){
         Route::get('/settings', [RegistroController::class, 'index'])->name('register');
         Route::post('/settings', [RegistroController::class, 'store'])->name('register.store');
+
+
+        Route::get('/users', [UsuariosController::class,'index'])->name('usuarios');
+        Route::get('/users/edit/{id}', [UsuariosController::class, 'edit'])->name('usuarios.edit');
+        Route::put('/users/update/{id}', [UsuariosController::class, 'update'])->name('usuarios.update');
+        Route::delete('/users/{id}', [UsuariosController::class, 'destroy'])->name('usuarios.destroy');
+
     });
 
 

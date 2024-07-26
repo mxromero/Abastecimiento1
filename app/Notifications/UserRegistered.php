@@ -39,18 +39,19 @@ class UserRegistered extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->subject('Bienvenido a Portal Productores')
-                    ->greeting('Hola ' . $this->user->name)
-                    ->line('¡Bienvenido a nuestra comunidad de productores! Nos complace informarle que su perfil ha sido creado exitosamente en nuestro portal de productores.')
-                    ->line('Con los siguientes datos:')
-                    ->line('Nombre: ' . $this->user->name)
-                    ->line('RUT: ' . $this->user->rut)
-                    ->line('Email: ' . $this->user->email)
-                    ->line('Contraseña temporal: ' . $this->temporaryPassword)
-                    ->line('Por favor, cambie su contraseña la primera vez que inicie sesión.')
-                    ->line('Esperamos que disfrute de esta plataforma y estamos a su disposición para cualquier consulta.');
+                ->subject('Bienvenido al Portal de Productores')
+                ->greeting('Hola ' . $this->user->name)
+                ->line('¡Bienvenido a nuestra comunidad de productores! Nos complace informarle que su perfil ha sido creado exitosamente en nuestro portal de productores.')
+                ->line('Con los siguientes datos:')
+                ->line('Nombre: ' . $this->user->name)
+                ->line('RUT: ' . $this->user->rut)
+                ->line('Email: ' . $this->user->email)
+                ->line('Contraseña temporal: ' . $this->temporaryPassword)
+                ->line('Por favor, cambie su contraseña la primera vez que inicie sesión.')
+                ->line('Puede acceder a su cuenta usando el siguiente enlace:')
+                ->action('Acceder al portal', url('/login')) // Aquí se añade el botón con la URL
+                ->line('Esperamos que disfrute de esta plataforma y estamos a su disposición para cualquier consulta.');
     }
-
     /**
      * Get the array representation of the notification.
      *

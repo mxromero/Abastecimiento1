@@ -8,7 +8,11 @@
 @stop
 
 @section('content')
-
+    @if (isset($error))
+        <div class="alert alert-danger">
+            {{ $error }}
+        </div>
+    @endif
     <table id="pdfTable" class="table table-striped table-bordered table-hover">
         <thead>
             <tr>
