@@ -8,43 +8,56 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title"><b>Bienvenido a la Plataforma de Productores</b></h5>
+                        <h5 class="card-title"><b>Bienvenido a la Plataforma de Salsa & Ketchup</b></h5>
                         <p class="card-text">
                             Nuestra nueva plataforma de productores le permitirá gestionar las notas de recepción que se realizaron en Aconcagua Foods.
+                            {{ $ExpSAP }}
                         </p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="row mb-4">
-            <div class="col-lg-6">
+        <div class="row">
+
+            <div class="col-md-3">
+                <div class="info-box">
+                    <span class="info-box-icon bg-info">{{ $ExpSAP }}</span>
+                    <div class="info-box-content">
+                    <span class="info-box-text"><b>SAP</b></span>
+                    <span class="info-box-text">No Exportadas</span>
+                    </div>
+                </div>
+            </div>             
+
+            <div class="col-md-6">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="card-title"><b>Nota Recepciones</b> - Mes Actual</h5>
+                        <h1>Ordenes Cargadas</h1>
                     </div>
                     <div class="card-body">
-                       <p class="card-text">
-                            Dentro de la opción "Nota Recepciones" se encuentra el sub-menú "Recepciones" en el podrá revisar las recepciones del mes actual.
-                        </p>
-                        <img src="{{ asset('images/mesActual.png') }}" class="img-fluid" alt="Imagen 1">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Material</th>
+                                    <th>Orden Prev.</th>
+                                    <th>Versión Fab.</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($OPCargadas as $item)
+                                    <tr>
+                                        <td>{{ $item->material_orden }}</td>
+                                        <td>{{ $item->NOrdPrev }}</td>
+                                        <td>{{ $item->VersionF }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
 
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title"><b>Nota Recepciones</b> - Mes Anterior</h5>
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text">
-                            Dentro de la opción "Rec.Mes Anterior" se encuentra el sub-menú "Recepciones" en el podrá revisar las recepciones del mes anterior.
-                        </p><br>
-                        <img src="{{ asset('images/mesAnterior.png') }}" class="img-fluid" alt="Imagen 2">
-                    </div>
-                </div>
-            </div>
             
         </div>
     </div>

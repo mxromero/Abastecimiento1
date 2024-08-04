@@ -327,16 +327,16 @@ return [
             'can' => 'admin-only',
         ],
         [
-            'header' => 'NOTAS DE RECEPCIÓN'
+            'header' => 'PRODUCCIÓN'
         ],
         [
-            'text' => 'Recepciones',
+            'text' => 'Producción',
             'icon' => 'fas fa-file',
             'submenu' => [
                 [
-                    'text' => 'Mes Actual',
+                    'text' => 'Reporte Producción',
                     'icon' => 'fas fa-angle-double-right',
-                    'url' => 'notas/mesactual',
+                    'url' => '/produccion',
                 ],
                 [
                     'text' => 'Mes Anterior',

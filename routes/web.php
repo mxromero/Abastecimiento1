@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\ControllerDescargaPdf;
-use App\Http\Controllers\NotasController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProduccionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegistroController;
 use App\Http\Controllers\PasswordChangeController;
@@ -10,17 +10,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
-//Redirecciona root hacia dashboard
-Route::get('/', function () {
-    return redirect()->route('dashboard');
-})->middleware(['auth', 'verified']);
+// Redirecciona root hacia dashboard
+Route::get('/', [DashboardController::class, 'redirectToDashboard'])
+    ->middleware(['auth', 'verified']);
 
-
-//Dashboard
-Route::get('/dashboard', function () {
-    $user = Auth::user();
-    return view('dashboard', compact('user'));
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Dashboard
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 
 //Autentificación usuario Routes
@@ -33,6 +30,16 @@ Route::middleware('auth')->group(function () {
         Route::delete('/', [ProfileController::class, 'destroy'])->name('profile.destroy');
     });
 
+    Route::prefix('produccion')->group(function () {
+        Route::get('/', [ProduccionController::class, 'index'])->name('produccion.index');
+        Route::get('/produccion/buscar', [ProduccionController::class, 'buscar'])->name('produccion.buscar');
+        Route::get('/create', [ProduccionController::class, 'create'])->name('produccion.create');
+        Route::post('/create', [ProduccionController::class,'store'])->name('produccion.store');
+        Route::get('/{id}/edit', [ProduccionController::class, 'edit'])->name('produccion.edit');
+        Route::patch('/{id}/edit', [ProduccionController::class, 'update'])->name('produccion.update');
+        Route::delete('/{id}/edit', [ProduccionController::class, 'destroy'])->name('produccion.destroy');
+    });
+    /*
     //Rutas Notas
     Route::prefix('notas')->group(function(){
         Route::get('/mesactual', [NotasController::class, 'NotaRecepcion'])->name('Notas.mesactual');
@@ -41,6 +48,7 @@ Route::middleware('auth')->group(function () {
 
     //Rutas Descarga PDF
     Route::get('/descargarPdf/{rut}/{anio}/{mes}/{filename}', [ControllerDescargaPdf::class, 'descargarPdf'])->name('descargar.pdf');
+    */
 
     //Cambio de Contraseña
     Route::get('password/change', [PasswordChangeController::class, 'showChangeForm'])->name('password.change');
