@@ -21,7 +21,7 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 
 
 //Autentificación usuario Routes
-Route::middleware('auth')->group(function () {  
+Route::middleware('auth')->group(function () {
 
     //Rutas Perfiles
     Route::prefix('profile')->group(function () {
@@ -32,23 +32,14 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('produccion')->group(function () {
         Route::get('/', [ProduccionController::class, 'index'])->name('produccion.index');
-        Route::get('/produccion/buscar', [ProduccionController::class, 'buscar'])->name('produccion.buscar');
+        Route::get('/buscar', [ProduccionController::class, 'buscar'])->name('produccion.buscar');
         Route::get('/create', [ProduccionController::class, 'create'])->name('produccion.create');
         Route::post('/create', [ProduccionController::class,'store'])->name('produccion.store');
         Route::get('/{id}/edit', [ProduccionController::class, 'edit'])->name('produccion.edit');
         Route::patch('/{id}/edit', [ProduccionController::class, 'update'])->name('produccion.update');
-        Route::delete('/{id}/edit', [ProduccionController::class, 'destroy'])->name('produccion.destroy');
+        Route::delete('/{id}/delete', [ProduccionController::class, 'destroy'])->name('produccion.destroy');
+        Route::get('/{id}/printer', [ProduccionController::class,'printer'])->name('produccion.printer');
     });
-    /*
-    //Rutas Notas
-    Route::prefix('notas')->group(function(){
-        Route::get('/mesactual', [NotasController::class, 'NotaRecepcion'])->name('Notas.mesactual');
-        Route::get('/mesanterior/{mesOffset?}', [NotasController::class, 'HistorialNotaRecepcion'])->name('Notas.mesanterior');    
-    });
-
-    //Rutas Descarga PDF
-    Route::get('/descargarPdf/{rut}/{anio}/{mes}/{filename}', [ControllerDescargaPdf::class, 'descargarPdf'])->name('descargar.pdf');
-    */
 
     //Cambio de Contraseña
     Route::get('password/change', [PasswordChangeController::class, 'showChangeForm'])->name('password.change');
