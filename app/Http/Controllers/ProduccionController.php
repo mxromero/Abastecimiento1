@@ -66,7 +66,8 @@ class ProduccionController extends Controller
                             .  '<form action="' . route('produccion.destroy', $row->uma) . '" method="POST" style="display: inline;" onsubmit="return confirmarEliminacion(event)>' .
                                     csrf_field() .
                                     method_field('DELETE') .
-                            '<button type="button" class="btn btn-link text-danger" ><i class="fas fa-trash" aria-hidden="true"></i></button>' .
+                            '<button type="button
+                            " class="btn btn-link text-danger" ><i class="fas fa-trash" aria-hidden="true"></i></button>' .
                             '</form>';
                 return $row;
             });
@@ -145,8 +146,9 @@ class ProduccionController extends Controller
         ]);
 
         $produccion = Produccion::where('uma',$exidv)->firstOrFail();
-
-        $produccion->update($request->all());
+        $produccion->exp_sap = '';
+        $produccion->fill($request->all());
+        $produccion->save();
 
         session()->forget('success');
 
@@ -180,6 +182,47 @@ class ProduccionController extends Controller
     }
 
     public function printer(string $id){
+
+        try{
+            $exidv = $id ? str_pad((string) $id, 20, '0', STR_PAD_LEFT) : null;
+
+            $nombre_archivo = env('NOMBRE_ARCHIVO_TXT');
+            $ruta_archivo = env('RUTA_ARCHIVO_TXT');
+            $ipImpresora = env('IMPRESORA_IP');
+
+            $full_path = $ruta_archivo . '/' . $nombre_archivo;
+
+            if(!file_exists($full_path)){
+                return redirect()->back()->withErrors(['error' => 'No existe el archivo de impresión']);
+            }
+
+            $datos = Produccion::where('uma',$exidv)->firstOrFail();
+            // Lee el contenido del archivo
+            $contenido = file_get_contents($full_path);
+            $reemplazos = [
+                    'MATERIAL' => '',
+                    'LOTE' => '',
+                    'DESCRIPCION' => '',
+                    'CANTIDAD' => '',
+                    'FECHA' => '',
+            ];
+
+            $patron = '/\[(\w+)\]/'; //Busca cualquier palabra entre [];
+
+            $cadenaReemplazada = preg_replace_callback($patron, function($coincidencias) use ($reemplazos) {
+                $parametro = $coincidencias[1]; // Obtiene el nombre del parámetro
+                return $reemplazos[$parametro] ?? $coincidencias[0]; // Reemplaza si existe, sino mantiene original
+            }, $contenido);
+
+            echo $cadenaReemplazada;
+
+
+        }catch(ModelNotFoundException $e){
+            return redirect()->route('produccion.buscar', session()->get('search_params', []))
+                                        ->withErrors(['error' => 'La producción no fue encontrada.']);
+        }catch (\Illuminate\Database\QueryException $e) {
+            return redirect()->back()->withErrors(['error' => 'Error al eliminar la producción.']);
+        }
 
     }
 }
