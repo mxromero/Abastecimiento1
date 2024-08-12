@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 use App\Models\Produccion;
+use App\Services\ImpresionService;
 
 class ProduccionController extends Controller
 {
@@ -184,45 +185,114 @@ class ProduccionController extends Controller
     public function printer(string $id){
 
         try{
+            $nombre_archivo = env('NOMBRE_ARCHIVO_TXT');    //Nombre del archivo
+            $ruta_archivo = env('RUTA_ARCHIVO_TXT');        //Ruta del archivo
+            $ipImpresora = env('IMPRESORA_IP');             //Ip impresora
+
+            //Unidad Manipulación de largo de 20
             $exidv = $id ? str_pad((string) $id, 20, '0', STR_PAD_LEFT) : null;
-
-            $nombre_archivo = env('NOMBRE_ARCHIVO_TXT');
-            $ruta_archivo = env('RUTA_ARCHIVO_TXT');
-            $ipImpresora = env('IMPRESORA_IP');
-
-            $full_path = $ruta_archivo . '/' . $nombre_archivo;
-
+            //Ruta completa del archivo ZPL
+            $full_path = storage_path($ruta_archivo . $nombre_archivo);
+            //Valida si existe el archivo
             if(!file_exists($full_path)){
                 return redirect()->back()->withErrors(['error' => 'No existe el archivo de impresión']);
             }
-
+            //Busca el detalle a la unidad de manipulación
             $datos = Produccion::where('uma',$exidv)->firstOrFail();
-            // Lee el contenido del archivo
+            // Lee el contenido del archivo codigo ZPL
             $contenido = file_get_contents($full_path);
+            //Encuentra la unida de mendida desde el materail
+            $unidadMedida = $this->buscar_unidadMedida($datos->material);
+            $cantidad = $this->buscar_cantidad($datos->material)?? $datos->cantidad;
+
+            //Rescato la descripcion del material desde tabla descripcion
+            $tablaDescrip = DB::table('DESCRIPCION')
+                                ->select('Descripcion','marca')
+                                ->where('material',$datos->material)
+                                ->first();
+            //Rescato fecha y la marca
+            $marcaFecha = $this->buscar_marcaFecha($datos->material,$datos) ?? $tablaDescrip->marca;
+
+            //Reemplaza codigo ZPL que se encuentra entre [] con el texto desde base de datos
             $reemplazos = [
-                    'MATERIAL' => '',
-                    'LOTE' => '',
-                    'DESCRIPCION' => '',
-                    'CANTIDAD' => '',
-                    'FECHA' => '',
+                'UMA_TEXTO' => $datos->uma,
+                'LOTE' => $datos->lote,
+                'MATERIAL' => $datos->material,
+                'PALETIZADORA' => $datos->paletizadora,
+                'BATCH' => trim($datos->batch1),
+                'FECHA_MARCA' => $marcaFecha,
+                'CANTIDAD' => $cantidad,
+                'HORA' => trim($datos->hora),
+                'FECHA' => Carbon::parse($datos->fecha)->format('d/m/Y'),
+                'DESCRIPCION' => $tablaDescrip->Descripcion,
+                'UNIDAD_MEDIDA' => $unidadMedida,
+                'UMA_12' => substr($datos->uma,0,12),
+                'UMA_1' => substr($datos->uma,-1)
             ];
 
-            $patron = '/\[(\w+)\]/'; //Busca cualquier palabra entre [];
+            //Busca cualquier palabra entre [];
+            $patron = '/\[(\w+)\]/';
 
+            //Busca y reemplaza los datos desde ZPL y txt
             $cadenaReemplazada = preg_replace_callback($patron, function($coincidencias) use ($reemplazos) {
-                $parametro = $coincidencias[1]; // Obtiene el nombre del parámetro
+                $parametro = $coincidencias[1];                      // Obtiene el nombre del parámetro
                 return $reemplazos[$parametro] ?? $coincidencias[0]; // Reemplaza si existe, sino mantiene original
             }, $contenido);
 
-            echo $cadenaReemplazada;
-
+            //Envio ZPL a Impresora de Red
+            $zpl = $cadenaReemplazada;
+            $impresionService = new ImpresionService();
+            $impresionService->imprimir($zpl, $ipImpresora);
 
         }catch(ModelNotFoundException $e){
-            return redirect()->route('produccion.buscar', session()->get('search_params', []))
+             return redirect()->route('produccion.buscar', session()->get('search_params', []))
                                         ->withErrors(['error' => 'La producción no fue encontrada.']);
         }catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->back()->withErrors(['error' => 'Error al eliminar la producción.']);
+             return redirect()->back()->withErrors(['error' => 'Error al eliminar la producción.']);
         }
 
     }
+
+    private function buscar_unidadMedida($material){
+        $letrasMaterial = substr($material,0,3);
+        $letrasMaterial = strtoupper($letrasMaterial);
+
+        if($letrasMaterial === "SPS"){
+            $unidadMedida = "KG";
+        } elseif(strpos($letrasMaterial,'S') === 0){
+            $unidadMedida = "CJ";
+        }else{
+            $unidadMedida = "LT";
+        }
+        return $unidadMedida;
+    }
+
+    private function buscar_cantidad($material){
+        $letrasMaterial = substr($material,0,3);
+        $cantidad = null;
+
+        if($letrasMaterial === "SPS"){
+            $cantidad = "240";
+        }
+        return $cantidad;
+    }
+
+    private function buscar_marcaFecha($material, $datos){
+        //Esta fecha es fecha calulcada x 2 años y si el material
+        //es SPS se deben agregar 2 años y cambiar el texto marca
+        //por Fecha Vencimiento.
+        $letrasMaterial = substr($material,0,3);
+        $fecha = null;
+        $anios = env('ANIO_VENCIMIENTO');
+
+        if($letrasMaterial === "SPS"){
+            $fechaCarbon = Carbon::parse($datos->fecha);
+            $nuevaFecha = $fechaCarbon->addYears($anios);
+            $fecha =  $nuevaFecha->format('d-m-Y');
+        }
+        return $fecha;
+    }
+
+
 }
+
