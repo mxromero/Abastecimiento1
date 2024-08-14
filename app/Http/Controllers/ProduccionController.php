@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Descripcion;
+use App\Models\limiteprd;
+use App\Models\paletizadoras;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\DataTables;
 use App\Models\Produccion;
 use App\Services\ImpresionService;
@@ -83,7 +87,23 @@ class ProduccionController extends Controller
 
     public function create()
     {
-        //
+        try{
+
+            $Lineas = DB::table('PALETIZADORAS')
+                            ->select('paletizadora')
+                            ->orderBy('paletizadora')
+                            ->get();
+
+           $Lineas->prepend((object)['paletizadora' => '']);
+
+
+        } catch (\Exception $e) {
+                Log::error($e);
+            return redirect()->back()->with('error', 'Ocurrió un error al obtener los datos de la base de datos.');
+        }
+
+
+        return view('produccion.creacion', compact('Lineas'));
     }
 
     /**
@@ -91,7 +111,35 @@ class ProduccionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+       // dd($request);
+
+        $ValidateData = $request->validate([
+            'uma' => 'required|string|max:20|unique:produccion,uma',
+            'material' => 'required|string|max:8',
+            'lote' => 'required|string',
+            'orden_prv' => 'required|string',
+            'version_f' => 'required|string',
+            'fecha' => 'required|date',
+            'hora' => 'required|string',
+            'cant_a' => 'required|string|min:1',
+            'cod_linea' => 'required|integer',
+            'almacen' => 'required|string|max:4',
+            'batch_a' => 'required|string',
+        ]);
+
+        $ValidateData['NOrdPrev'] = $ValidateData['orden_prv'];
+        $ValidateData['VersionF'] = $ValidateData['version_f'];
+        $ValidateData['cantidad'] = $ValidateData['cant_a'];
+        $ValidateData['paletizadora'] = $ValidateData['cod_linea'];
+        $ValidateData['batch1'] = $ValidateData['batch_a'];
+        $ValidateData['cant1'] = $ValidateData['cantidad'];
+        $ValidateData['uma'] = str_pad($ValidateData['uma'], 20, '0', STR_PAD_LEFT);
+
+        Produccion::create($ValidateData);
+
+        return view('produccion.creacion');
+
     }
 
     /**
@@ -101,6 +149,50 @@ class ProduccionController extends Controller
     {
         //
     }
+
+    public function obtenerDatosLinea(Request $request)
+    {
+        try {
+            $SAP_lineas = Paletizadoras::Select('paletizadora','NOrdPrev','VersionF','material_orden','almacen')->where('paletizadora', $request->cod_linea)->first();
+
+            if (!$SAP_lineas) {
+                return response()->json(['error' => 'No se encontraron datos en PALETIZADORAS.'], 404);
+            }
+
+
+           $Uma = Produccion::select('uma', 'material', 'lote', 'batch1')
+                ->where('paletizadora', $request->cod_linea)
+                ->where('NOrdPrev', $SAP_lineas->NOrdPrev)
+                ->where('VersionF', $SAP_lineas->VersionF)
+                ->where('material', trim($SAP_lineas->material_orden))
+                ->orderByDesc('uma')
+                ->first();
+
+            if (!$Uma) {
+                return response()->json(['error' => 'No se encontraron datos en produccion.'], 404);
+            }
+
+            $limiteProduccion = limiteprd::Select('cajas', 'descripcion','unm')->where('material',trim($SAP_lineas->material_orden))->first();
+
+
+
+            if(!$limiteProduccion){
+                return response()->json(['error' => 'No se encontraron datos de limite produccion'], 404);
+            }
+
+            $salida_combinada = array_merge($SAP_lineas->toArray(), $Uma->toArray(), $limiteProduccion->toArray());
+
+            return response()->json($salida_combinada);
+
+        } catch (ModelNotFoundException $e) { // Capturar excepción específica
+            return response()->json(['error' => 'No se encontró el registro.'], 404);
+        } catch (\Throwable $th) {
+            Log::error($th);
+            return response()->json(['error' => 'Ocurrió un error al procesar la solicitud.'], 500);
+        }
+    }
+
+
 
     /**
      * Show the form for editing the specified resource.
@@ -170,7 +262,7 @@ class ProduccionController extends Controller
             $produccion->delete();
 
             return redirect()->route('produccion.buscar', session()->get('search_params', []))
-                             ->with('success', 'Producción eliminada con éxito.');
+                             ->with('success', 'Unidad Manipulación eliminada con éxito.');
 
         } catch (ModelNotFoundException $e) {
             return redirect()->route('produccion.buscar', session()->get('search_params', []))
@@ -243,6 +335,9 @@ class ProduccionController extends Controller
             $zpl = $cadenaReemplazada;
             $impresionService = new ImpresionService();
             $impresionService->imprimir($zpl, $ipImpresora);
+
+            return redirect()->route('produccion.buscar', session()->get('search_params',[]))
+                              ->with('success', '¡El registro fue impreso exitosamente!');
 
         }catch(ModelNotFoundException $e){
              return redirect()->route('produccion.buscar', session()->get('search_params', []))

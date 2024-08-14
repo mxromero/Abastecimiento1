@@ -9,15 +9,19 @@
 
 @section('content')
 
-@if (session('success'))
-    <div class="alert alert-success" id="success-alert">
-        {{ session('success') }}
-    </div>
+    @if (session('success'))
+        <div class="alert alert-success" id="success-alert">
+            {{ session('success') }}
+        </div>
     @endif
 
-    @if ($errors->has('uma'))
+    @if ($errors->any())
         <div class="alert alert-danger" id="danger-alert">
-            {{ $errors->first('uma') }}
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
         </div>
     @endif
 

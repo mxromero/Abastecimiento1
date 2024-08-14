@@ -16,6 +16,11 @@ class Produccion extends Model
 
     protected $attributes = [
         'centro' => 'PDBU',
+        'n_doc' => ' ',
+        'exp_sap' => ' ',
+        'li_mb' => ' ',
+        'li_fq' => ' ',
+        'cant2' => ' ',
     ];
 
 
@@ -34,6 +39,8 @@ class Produccion extends Model
         'cantidad',
         'paletizadora',
         'batch1',
+        'cant1',
+        'cant2',
     ];
 
 

@@ -33,7 +33,8 @@ Route::middleware('auth')->group(function () {
     Route::prefix('produccion')->group(function () {
         Route::get('/', [ProduccionController::class, 'index'])->name('produccion.index');
         Route::get('/buscar', [ProduccionController::class, 'buscar'])->name('produccion.buscar');
-        Route::get('/create', [ProduccionController::class, 'create'])->name('produccion.create');
+        Route::get('/create', [ProduccionController::class, 'create'])->name('produccion.creacion');
+        Route::get('/datos', [ProduccionController::class, 'obtenerDatosLinea'])->name('produccion.obtenerDatos');
         Route::post('/create', [ProduccionController::class,'store'])->name('produccion.store');
         Route::get('/{id}/edit', [ProduccionController::class, 'edit'])->name('produccion.edit');
         Route::patch('/{id}/edit', [ProduccionController::class, 'update'])->name('produccion.update');

@@ -299,7 +299,7 @@ return [
             'type' => 'fullscreen-widget',
             'topnav_right' => true,
         ],
-    
+
         // Sidebar items:
         [
             'text' => 'Dashboard',
@@ -339,9 +339,9 @@ return [
                     'url' => '/produccion',
                 ],
                 [
-                    'text' => 'Mes Anterior',
+                    'text' => 'Notificar Producción',
                     'icon' => 'fas fa-angle-double-left',
-                    'url' => 'notas/mesanterior',
+                    'route' => 'produccion.creacion',
                 ],
             ],
         ],
