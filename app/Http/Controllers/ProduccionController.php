@@ -84,17 +84,22 @@ class ProduccionController extends Controller
 
      }
 
+     public function obtenerLineas(){
+
+        $Lineas = DB::table('PALETIZADORAS')
+        ->select('paletizadora')
+        ->orderBy('paletizadora')
+        ->get();
+
+        $Lineas->prepend((object)['paletizadora' => '']);
+
+        return $Lineas;
+     }
 
     public function create()
     {
         try{
-
-            $Lineas = DB::table('PALETIZADORAS')
-                            ->select('paletizadora')
-                            ->orderBy('paletizadora')
-                            ->get();
-
-           $Lineas->prepend((object)['paletizadora' => '']);
+            $Lineas = $this->obtenerLineas();
 
 
         } catch (\Exception $e) {
@@ -112,8 +117,20 @@ class ProduccionController extends Controller
     public function store(Request $request)
     {
 
-       // dd($request);
+        $Lineas = $this->obtenerLineas();
 
+        //Modifico los datos antes de validar.
+        $request->merge([
+            'uma' => str_pad($request['uma'], 20, '0', STR_PAD_LEFT),
+            'orden_prv' => $request['orden_prv'],
+            'version_f' => $request['version_f'],
+            'cant_a' => $request['cant_a'],
+            'cod_linea' => $request['cod_linea'],
+            'batch_a' => $request['batch_a'],
+            'cant_a' => $request['cant_a'],
+        ]);
+
+        //Realizo la validación
         $ValidateData = $request->validate([
             'uma' => 'required|string|max:20|unique:produccion,uma',
             'material' => 'required|string|max:8',
@@ -136,9 +153,12 @@ class ProduccionController extends Controller
         $ValidateData['cant1'] = $ValidateData['cantidad'];
         $ValidateData['uma'] = str_pad($ValidateData['uma'], 20, '0', STR_PAD_LEFT);
 
+        //Genera el insert
         Produccion::create($ValidateData);
 
-        return view('produccion.creacion');
+        $this->printer($ValidateData['uma']);
+
+        return view('produccion.creacion', compact('Lineas'));
 
     }
 
@@ -191,8 +211,6 @@ class ProduccionController extends Controller
             return response()->json(['error' => 'Ocurrió un error al procesar la solicitud.'], 500);
         }
     }
-
-
 
     /**
      * Show the form for editing the specified resource.
