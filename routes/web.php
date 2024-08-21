@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ConfiguracionController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProduccionController;
 use App\Http\Controllers\ProfileController;
@@ -28,6 +29,14 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    });
+
+    Route::prefix('configuracion')->group(function(){
+        Route::get('/', [ConfiguracionController::class, 'index'])->name('configuracion.lineas');
+        Route::get('/historial',[ConfiguracionController::class, 'obtienePaletizadoras'])->name('configuracion.historial');
+        Route::get('/update', [ConfiguracionController::class, 'update'])->name('configuracion.update');
+        Route::get('/create', [ConfiguracionController::class, 'create'])->name('configuracion.create');
+        Route::get('/destroy/{id}', [ConfiguracionController::class, 'destroy'])->name('configuracion.destroy');
     });
 
     Route::prefix('produccion')->group(function () {

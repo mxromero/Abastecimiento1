@@ -13,9 +13,11 @@ use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\DataTables;
 use App\Models\Produccion;
 use App\Services\ImpresionService;
+use App\Traits\ObtieneLineasTrait;
 
 class ProduccionController extends Controller
 {
+    use ObtieneLineasTrait;
     /**
      * Display a listing of the resource.
      */
@@ -84,17 +86,6 @@ class ProduccionController extends Controller
 
      }
 
-     public function obtenerLineas(){
-
-        $Lineas = DB::table('PALETIZADORAS')
-        ->select('paletizadora')
-        ->orderBy('paletizadora')
-        ->get();
-
-        $Lineas->prepend((object)['paletizadora' => '']);
-
-        return $Lineas;
-     }
 
     public function create()
     {

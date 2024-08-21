@@ -327,6 +327,14 @@ return [
             'can' => 'admin-only',
         ],
         [
+            'header' => 'CONFIGURACIÓN LINEAS'
+        ],
+        [
+            'text' => 'Líneas',
+            'icon' => 'fa-solid fa-gear',
+            'route' => 'configuracion.lineas'
+        ],
+        [
             'header' => 'PRODUCCIÓN'
         ],
         [
