@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\paletizadoras;
+use App\Services\SapService;
 use Illuminate\Http\Request;
 
 use App\Traits\ObtieneLineasTrait;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
 class ConfiguracionController extends Controller
@@ -14,11 +16,13 @@ class ConfiguracionController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+     protected $lineasProduccion;
+
+
     public function index()
     {
         $Lineas = $this->obtienePaletizadoras();
-
-
 
         return view('configuracion.lineas');
     }
@@ -46,7 +50,36 @@ class ConfiguracionController extends Controller
      */
     public function create()
     {
-        //
+
+        $paletizadoras = DB::table('paletizadoras')
+                            ->select('paletizadora as paletizadora_alias')
+                            ->orderBy('paletizadora','asc')
+                            ->distinct()
+                            ->pluck('paletizadora_alias','paletizadora_alias');
+        $paletizadoras->prepend('','0'); //Agrega espacio en blanco
+
+        $Lineas = $paletizadoras;
+
+
+        return view('configuracion.create', compact('Lineas'));
+    }
+
+    public function valida_ordenes(Request $request){
+
+        $ValidaOp = new SapService();
+
+
+        $parametros = [
+            'VgMatnr' => $request->Material,
+            'VgPlnum' => $request->OrdenPrev,
+            'VgVerid' => $request->Version,
+        ];
+
+        $responseArray = $ValidaOp->obtenerDatos($parametros); //
+
+        dd($responseArray);
+
+        return $responseArray;
     }
 
     /**
