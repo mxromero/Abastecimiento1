@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\ConfiguracionController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\lineasController;
 use App\Http\Controllers\ProduccionController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReclasificadoController;
 use App\Http\Controllers\RegistroController;
 use App\Http\Controllers\PasswordChangeController;
 use App\Http\Controllers\UsuariosController;
@@ -34,11 +36,16 @@ Route::middleware('auth')->group(function () {
     Route::prefix('configuracion')->group(function(){
         Route::get('/', [ConfiguracionController::class, 'index'])->name('configuracion.lineas');
         Route::get('/historial',[ConfiguracionController::class, 'obtienePaletizadoras'])->name('configuracion.historial');
-        Route::post('/update/{id}', [ConfiguracionController::class, 'update'])->name('configuracion.update');
+        Route::patch('/update/{id}', [ConfiguracionController::class, 'update'])->name('configuracion.update');
         Route::get('/create/{id}', [ConfiguracionController::class, 'create'])->name('configuracion.create');
         Route::post('/create',[ConfiguracionController::class, 'store'])->name('configuracion.store');
         Route::post('/create/SAP',[ConfiguracionController::class, 'valida_ordenes'])->name('configuracion.valida_ordenes');
         Route::get('/destroy/{id}', [ConfiguracionController::class, 'destroy'])->name('configuracion.destroy');
+    });
+
+    Route::prefix('lineas')->group(function(){
+        Route::get('/', [lineasController::class,'index'])->name('lineas.index');
+        Route::post('/create',[lineasController::class,'store'])->name('lineas.create');
     });
 
     Route::prefix('produccion')->group(function () {
@@ -51,6 +58,12 @@ Route::middleware('auth')->group(function () {
         Route::patch('/{id}/edit', [ProduccionController::class, 'update'])->name('produccion.update');
         Route::delete('/{id}/delete', [ProduccionController::class, 'destroy'])->name('produccion.destroy');
         Route::get('/{id}/printer', [ProduccionController::class,'printer'])->name('produccion.printer');
+    });
+
+    Route::prefix('reclasificado')->group(function(){
+        Route::get('/', [ReclasificadoController::class, 'index'])->name('reclasificado.index');
+        Route::post('/create',[ReclasificadoController::class,'create'])->name('reclasificado.create');
+        Route::patch('/update/{id}',[ReclasificadoController::class,'update'])->name('reclasificado.update');
     });
 
     //Cambio de Contraseña

@@ -4,20 +4,39 @@
 
 @section('content_header')
     <h1>Configuración Líneas
-        @if(isset($Lineas[1]))
-            {{ $Lineas[1] }}
+        @if(isset($Lineas))
+            {{ $Lineas[0] }}
         @endif
     </h1>
 @stop
 
 @section('content')
 
+<!-- Mensaje de éxito -->
+@if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
+<!-- Mensajes de error -->
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
     <div class="container">
-        <form action="{{ route('configuracion.update',['id' => $Lineas[1]]) }}" method="POST" class="mt-4">
+        <form action="{{ route('configuracion.update', ['id' => $Lineas[0] ]) }}" method="POST" class="mt-4">
             @csrf
+            @method('PATCH')
 
             <div class="form-group">
                 <label for="NOrdPrev">N° Ord. Prev.:</label>
@@ -68,10 +87,11 @@
         </form>
     </div>
     <script>
-        document.getElementById('NOrdPrev').focus();
+        const materialOrdenInput = document.getElementById('material_orden');
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const materialOrdenInput = document.getElementById('material_orden');
+            document.getElementById('NOrdPrev').focus();
+            document.addEventListener('DOMContentLoaded', function() {
+
             if (materialOrdenInput) {
                 materialOrdenInput.addEventListener('blur', function() {
                     let NOrdPrev = document.getElementById('NOrdPrev').value;

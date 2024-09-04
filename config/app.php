@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Productores AFSA'),
+    'name' => env('APP_NAME', 'Planta Salsa AFSA'),
 
     /*
     |--------------------------------------------------------------------------

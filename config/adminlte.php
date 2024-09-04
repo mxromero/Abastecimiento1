@@ -335,6 +335,11 @@ return [
             'route' => 'configuracion.lineas'
         ],
         [
+            'text' => 'Nueva Líneas',
+            'icon' => 'fas-regular fa-newspaper',
+            'route' => 'lineas.index'
+        ],
+        [
             'header' => 'PRODUCCIÓN'
         ],
         [
@@ -350,6 +355,11 @@ return [
                     'text' => 'Notificar Producción',
                     'icon' => 'fas fa-angle-double-left',
                     'route' => 'produccion.creacion',
+                ],
+                [
+                    'text' => 'Reclasificado',
+                    'icon' => 'fa fa-random',
+                    'route' => 'reclasificado.index',
                 ],
             ],
         ],
