@@ -7,29 +7,39 @@ use SoapClient;
 class SapService
 {
     protected $client;
+    protected $sapUser;
+    protected $sapPassword;
 
     public function __construct()
     {
+        $this->sapUser = env('SAP_USERNAME');
+        $this->sapPassword = env('SAP_PASSWORD');
+   }
+
+    public function valida_ordenPrev(){
+
         $wsdl = env('WS_SAP_VALIDA_ORDENES_WSDL');
-        $sapUser = env('SAP_USERNAME');
-        $sapPassword = env('SAP_PASSWORD');
 
         $this->client = new SoapClient($wsdl, [
-            'login' =>  $sapUser,
-            'password' => $sapPassword,
+            'login' =>  $this->sapUser,
+            'password' => $this->sapPassword,
             'stream_context' => stream_context_create([
             'ssl' => [
                 'verify_peer' => false,
                 'verify_peer_name' => false,
                 'allow_self_signed' => true,
-            ]
-    ])
+                ]
+            ])
         ]);
+
+
     }
 
     public function obtenerDatos($parametros)
     {
         try {
+            $this->valida_ordenPrev();
+
             $response = $this->client->__soapCall('ZppValidaOrdenes', [$parametros]);
             $responseArray = json_decode(json_encode($response), true);
 
@@ -40,13 +50,13 @@ class SapService
                 if ($messageType == 'E') {
                     return [
                         'success' => false,
-                        'message' => "Error en SAP: " . $message,
+                        'message' => $message,
                         'data' => null
                     ];
                 } elseif ($messageType == 'W') {
                     return [
                         'success' => true,
-                        'message' => "Advertencia en SAP: " . $message,
+                        'message' => $message,
                         'data' => $responseArray
                     ];
                 }
@@ -55,7 +65,7 @@ class SapService
             return [
                 'success' => true,
                 'message' => "Operación exitosa.",
-                'data' => $responseArray
+                'data' => $responseArray['LtValido']
             ];
 
         } catch (\Exception $e) {

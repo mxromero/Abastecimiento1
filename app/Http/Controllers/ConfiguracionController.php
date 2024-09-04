@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\paletizadoras;
 use App\Services\SapService;
+
 use Illuminate\Http\Request;
 
 use App\Traits\ObtieneLineasTrait;
@@ -36,7 +37,7 @@ class ConfiguracionController extends Controller
         return DataTables::of($config_linea)
         ->addColumn('acciones', function ($linea) {
             return '
-                <a href="'. route('configuracion.create') .'" class="btn btn-primary btn-sm">Nuevo</a>
+                <a href="'. route('configuracion.create', $linea->paletizadora) .'" class="btn btn-primary btn-sm">Nuevo</a>
                 <a href="'. route('configuracion.update', $linea->paletizadora) .'" class="btn btn-info btn-sm">Editar</a>
                 <a href="'. route('configuracion.destroy', $linea->paletizadora) .'" class="btn btn-secondary btn-sm" onclick="return confirm(\'¿Estás seguro de eliminar este registro?\')">Quitar</a>
             ';
@@ -48,11 +49,12 @@ class ConfiguracionController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(string $id)
     {
 
         $paletizadoras = DB::table('paletizadoras')
                             ->select('paletizadora as paletizadora_alias')
+                            ->where('paletizadora', $id)
                             ->orderBy('paletizadora','asc')
                             ->distinct()
                             ->pluck('paletizadora_alias','paletizadora_alias');
@@ -77,8 +79,6 @@ class ConfiguracionController extends Controller
 
         $responseArray = $ValidaOp->obtenerDatos($parametros); //
 
-        dd($responseArray);
-
         return $responseArray;
     }
 
@@ -87,7 +87,8 @@ class ConfiguracionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+
     }
 
     /**
@@ -112,6 +113,32 @@ class ConfiguracionController extends Controller
     public function update(Request $request, string $id)
     {
         //
+        try{
+
+
+                $validateData = $request->validate([
+                                    'NOrdPrev' => 'numeric|min:5|max:5|required',
+                                    'VersionF' => 'string|min:4|max:4|required',
+                                    'material_orden' => 'string|max:10|required',
+                                    'paletizadora' => 'integer|min:1|max:2|required',
+                                    'almacen' => 'regex:/^[A-Z]{2}[0-9]{2}$/|required',
+                                ]);
+
+                $paletizadora = paletizadoras::findOrFail($id);
+
+                // Transformar campos a mayúsculas/minúsculas
+                $validateData['almacen'] = strtoupper($validateData['almacen']);
+                $validateData['material_orden'] = strtoupper($validateData['material_orden']);
+                $validateData['VersionF'] = strtolower($validateData['VersionF']);
+
+                $paletizadora->update($validateData);
+
+                return redirect()->route('configuracion.lineas')->with('success', 'Datos de la paletizadora actualizados exitosamente.');
+
+            } catch (\Exception $e) {
+
+                return back()->withErrors(['error' => 'Ocurrió un error al actualizar la paletizadora. Por favor, inténtalo de nuevo.']);
+            }
     }
 
     /**

@@ -34,8 +34,8 @@ Route::middleware('auth')->group(function () {
     Route::prefix('configuracion')->group(function(){
         Route::get('/', [ConfiguracionController::class, 'index'])->name('configuracion.lineas');
         Route::get('/historial',[ConfiguracionController::class, 'obtienePaletizadoras'])->name('configuracion.historial');
-        Route::get('/update', [ConfiguracionController::class, 'update'])->name('configuracion.update');
-        Route::get('/create', [ConfiguracionController::class, 'create'])->name('configuracion.create');
+        Route::post('/update/{id}', [ConfiguracionController::class, 'update'])->name('configuracion.update');
+        Route::get('/create/{id}', [ConfiguracionController::class, 'create'])->name('configuracion.create');
         Route::post('/create',[ConfiguracionController::class, 'store'])->name('configuracion.store');
         Route::post('/create/SAP',[ConfiguracionController::class, 'valida_ordenes'])->name('configuracion.valida_ordenes');
         Route::get('/destroy/{id}', [ConfiguracionController::class, 'destroy'])->name('configuracion.destroy');
