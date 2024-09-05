@@ -340,6 +340,11 @@ return [
             'route' => 'lineas.index'
         ],
         [
+            'text' => 'Cantidad a Material',
+            'icon' => 'fas-regular fa-newspaper',
+            'route' => 'cantidad.index'
+        ],
+        [
             'header' => 'PRODUCCIÓN'
         ],
         [

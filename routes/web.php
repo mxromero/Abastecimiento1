@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CantidadController;
 use App\Http\Controllers\ConfiguracionController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\lineasController;
@@ -64,6 +65,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [ReclasificadoController::class, 'index'])->name('reclasificado.index');
         Route::post('/create',[ReclasificadoController::class,'create'])->name('reclasificado.create');
         Route::patch('/update/{id}',[ReclasificadoController::class,'update'])->name('reclasificado.update');
+    });
+
+    Route::prefix('cantidad')->group(function(){
+        Route::get('/', [CantidadController::class, 'index'])->name('cantidad.index');
+        Route::post('/', [CantidadController::class, 'store'])->name('cantidad.store');
     });
 
     //Cambio de Contraseña
