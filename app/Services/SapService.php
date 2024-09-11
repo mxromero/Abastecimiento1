@@ -71,7 +71,7 @@ class SapService
         } catch (\Exception $e) {
             return [
                 'success' => false,
-                'message' => 'Error al conectar con el servicio: ' . $e->getMessage(),
+                'message' => 'Error al conectar con el servicio: revise los datos enviados',
                 'data' => null
             ];
         }

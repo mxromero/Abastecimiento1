@@ -12,22 +12,16 @@ class limiteprd extends Model
 
     protected $table = 'LIMITEPRD';
 
-
-
     protected $primaryKey = 'material';
-
-    protected $attributes = [
-        'centro' => 'PDBU',
-    ];
 
     public $timestamps = false;
 
 
-
     protected $fillable = [
-        'Material',
-        'Descripcion',
-        'Marca',
+        'material',
+        'descripcion',
+        'unm',
+        'cajas',
     ];
 
 }

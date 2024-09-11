@@ -74,7 +74,6 @@
                         };
 
         function confirmarEliminacion(event, uma) {
-            alert('uma' + uma);
             event.preventDefault(); // Prevenir el envío del formulario
 
             Swal.fire({
@@ -84,14 +83,18 @@
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText:
-        'Sí, eliminar',
+                confirmButtonText: 'Sí, eliminar',
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
-                if (result.isConfirmed)
-        {
+                if (result.isConfirmed){
                     // Enviar el formulario si el usuario confirma
-                    $(event.target).closest('form').submit();
+                    const form = $(event.target).closest('form');
+
+                    //alert(fomr.);
+                    // Desactivar el evento submit para evitar la recursividad
+                    form.off('submit');
+
+                    form.submit();
                 }
             });
         }

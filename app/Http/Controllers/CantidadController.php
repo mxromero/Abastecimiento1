@@ -31,7 +31,7 @@ class CantidadController extends Controller
             if($limite){
                 $resultado[$material] = $limite->cajas;
             }else{
-                $resultado[$material] = 0;
+               continue;
             }
 
         }
@@ -60,14 +60,12 @@ class CantidadController extends Controller
             ]);
 
             $material = $request->input('material');
-            $material = 'TMM10016';
 
-            $limiteMaterial = limiteprd::where('material',$material)
-                                        ->first();
+            $limiteMaterial = limiteprd::where('material', $material)->first();
 
             if($limiteMaterial){
                 $actualizado = $limiteMaterial->update([
-                    'cajas' => $request->input('cajas'),
+                    'cajas' => $request->input('cantidad'),
                 ]);
 
 
@@ -84,8 +82,10 @@ class CantidadController extends Controller
 
                 $nuevoRegistro = limiteprd::create([
                     'material' => $material,
-                    'cajas' => $request->input('cajas'),
+                    'descripcion' => '',
+                    'cajas' => $request->input('cantidad'),
                 ]);
+
 
                 if ($nuevoRegistro) {
                     // Si la creación fue exitosa

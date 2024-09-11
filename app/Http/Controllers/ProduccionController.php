@@ -70,12 +70,7 @@ class ProduccionController extends Controller
                 $row->uma = ltrim($row->uma,'0');
                 $row->action = '<a href="' . route('produccion.edit', $row->uma) . '"><i class="fas fa-pencil" aria-hidden="true"></i></a>|'
                             .  '<a href="' . route('produccion.printer', $row->uma) . '"><i class="fas fa-print" aria-hidden="true"></i></a>|'
-                            .  '<form action="' . route('produccion.destroy', $row->uma) . '" method="POST" style="display: inline;" onsubmit="return confirmarEliminacion(event)>' .
-                                    csrf_field() .
-                                    method_field('DELETE') .
-                            '<button type="button
-                            " class="btn btn-link text-danger" ><i class="fas fa-trash" aria-hidden="true"></i></button>' .
-                            '</form>';
+                            .  view('components.delete-form', ['uma' => $row->uma])->render();
                 return $row;
             });
 

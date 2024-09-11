@@ -10,20 +10,20 @@
 
 <!-- Mensaje de éxito -->
 @if (session('success'))
-    <div class="alert alert-success">
+    <x-alert type="success" id="cantidad-success-alert">
         {{ session('success') }}
-    </div>
+    </x-alert>
 @endif
 
 <!-- Mensajes de error -->
 @if ($errors->any())
-    <div class="alert alert-danger">
+    <x-alert type="danger">
         <ul>
             @foreach ($errors->all() as $error)
                 <li>{{ $error }}</li>
             @endforeach
         </ul>
-    </div>
+    </x-alert>
 @endif
 
 <div class="container">
@@ -75,11 +75,43 @@
 
 @section('js')
 <script>
+
     $(document).ready(function() {
         $('#materiales-table').DataTable({
             "paging": true,
             "searching": true,
-            "ordering": true
+            "ordering": true,
+            language: {
+                    "sProcessing":    "Procesando...",
+                    "sLengthMenu":    "Mostrar _MENU_ registros",
+                    "sZeroRecords":   "No se encontraron resultados",
+                    "sEmptyTable":    "Ningún dato disponible en esta tabla",
+                    "sInfo":          "Registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    "sInfoEmpty":     "Registros del 0 al 0 de un total de 0 registros",
+                    "sInfoFiltered":  "(filtrado de un total de _MAX_ registros)",
+                    "sInfoPostFix":   "",
+                    "sSearch":        "Buscar:",
+                    "sUrl":           "",
+                    "sInfoThousands":  ",",
+                    "sLoadingRecords": "Cargando...",
+                    "oPaginate": {
+                        "sFirst":    "Primero",
+                        "sLast":     "Último",
+                        "sNext":     "Siguiente",
+                        "sPrevious": "Anterior"
+                    },
+                    "oAria": {
+                        "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                    },
+                    "buttons": {
+                        "copyTitle": 'Copiar filas al portapapeles',
+                        "copySuccess": {
+                            _: '%d filas copiadas',
+                            1: '1 fila copiada'
+                        }
+                    }
+                }
         });
     });
 </script>

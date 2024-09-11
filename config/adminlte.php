@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'title' => 'Productores',
+    'title' => 'Salsa y Ketchup',
     'title_prefix' => '',
     'title_postfix' => '',
 
@@ -63,7 +63,7 @@ return [
     |
     */
 
-    'logo' => '<b>Productores</b> AFSA',
+    'logo' => '<b>Planta Salsa Ketchup</b>',
     'logo_img' => '',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
@@ -309,40 +309,53 @@ return [
         [
             'header' => 'CONFIGURACIÓN CUENTA'
         ],
+            [
+                'text' => 'Cuenta',
+                'icon' => 'fas fa-user-circle',
+                'submenu' => [
+                    [
+                        'text' => 'Perfil',
+                        'url' => 'profile',
+                        'icon' => 'fas fa-fw fa-user',
+                    ],
+                    [
+                        'text' => 'Registrar',
+                        'url' => 'admin/settings',
+                        'icon' => 'fas fa-address-book',
+                        'can' => 'admin-only',
+                    ],
+                    [
+                        'text' => 'Usuarios',
+                        'url' => 'admin/users',
+                        'icon' => 'fas fa-users',
+                        'can' => 'admin-only',
+                    ],
+                ],
+            ],
+
         [
-            'text' => 'Perfil',
-            'url' => 'profile',
-            'icon' => 'fas fa-fw fa-user',
+            'header' => 'CONFIGURACIÓN PLANTA'
         ],
         [
-            'text' => 'Registrar',
-            'url' => 'admin/settings',
-            'icon' => 'fas fa-address-book',
-            'can' => 'admin-only',
-        ],
-        [
-            'text' => 'Usuarios',
-            'url' => 'admin/users',
-            'icon' => 'fas fa-users',
-            'can' => 'admin-only',
-        ],
-        [
-            'header' => 'CONFIGURACIÓN LINEAS'
-        ],
-        [
-            'text' => 'Líneas',
-            'icon' => 'fa-solid fa-gear',
-            'route' => 'configuracion.lineas'
-        ],
-        [
-            'text' => 'Nueva Líneas',
-            'icon' => 'fas-regular fa-newspaper',
-            'route' => 'lineas.index'
-        ],
-        [
-            'text' => 'Cantidad a Material',
-            'icon' => 'fas-regular fa-newspaper',
-            'route' => 'cantidad.index'
+            'text' => 'Configuración',
+            'icon' => 'fas fa-cogs',
+            'submenu' => [
+                            [
+                                'text' => 'Líneas',
+                                'icon' => 'fas fa-bars',
+                                'route' => 'configuracion.lineas'
+                            ],
+                            [
+                                'text' => 'Nueva Líneas',
+                                'icon' => 'fas fa-barcode',
+                                'route' => 'lineas.index'
+                            ],
+                            [
+                                'text' => 'Cantidad a Material',
+                                'icon' => 'fas fa-microchip',
+                                'route' => 'cantidad.index'
+                            ],
+                    ],
         ],
         [
             'header' => 'PRODUCCIÓN'
@@ -353,12 +366,12 @@ return [
             'submenu' => [
                 [
                     'text' => 'Reporte Producción',
-                    'icon' => 'fas fa-angle-double-right',
+                    'icon' => 'fas fa-archive',
                     'url' => '/produccion',
                 ],
                 [
                     'text' => 'Notificar Producción',
-                    'icon' => 'fas fa-angle-double-left',
+                    'icon' => 'fas fa-upload',
                     'route' => 'produccion.creacion',
                 ],
                 [
