@@ -27,12 +27,7 @@
                             @method('PUT')
 
                             <div class="form-group">
-                                <label for="rut">RUT</label>
-                                <input type="text" name="rut" class="form-control" value="{{ old('rut', $user->rut) }}" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="name">Nombre Proveedor</label>
+                                <label for="name">Nombre Usuario</label>
                                 <input type="text" name="name" class="form-control" value="{{ old('name', $user->name) }}" required>
                             </div>
 

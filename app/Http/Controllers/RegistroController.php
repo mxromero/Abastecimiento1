@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Registrar;
 use App\Notifications\UserRegistered;
 use Illuminate\Http\Request;
-use App\Models\Role; 
+use App\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
@@ -17,7 +17,7 @@ class RegistroController extends Controller
 
     public function index(){
 
-        $roles = Role::all(); // Obtén todos los roles
+        $roles = Role::where('id', '!=', 2)->get(); // Obtén todos los roles
         return view('auth.register', compact('roles'));
     }
 
@@ -26,8 +26,6 @@ class RegistroController extends Controller
         // Validar los datos del formulario
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            'rut' => 'required|string|max:20|unique:users,rut',
-            'descripcion' => 'nullable|string|max:1000',
             'email' => 'required|string|email|max:255|unique:users,email',
             'role_id' => 'required|exists:roles,id', // Asumiendo que tienes una tabla roles
         ]);

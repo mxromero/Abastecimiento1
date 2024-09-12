@@ -9,6 +9,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReclasificadoController;
 use App\Http\Controllers\RegistroController;
 use App\Http\Controllers\PasswordChangeController;
+use App\Http\Controllers\RolesController;
 use App\Http\Controllers\UsuariosController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -87,6 +88,15 @@ Route::middleware('auth')->group(function () {
         Route::get('/users/edit/{id}', [UsuariosController::class, 'edit'])->name('usuarios.edit');
         Route::put('/users/update/{id}', [UsuariosController::class, 'update'])->name('usuarios.update');
         Route::delete('/users/{id}', [UsuariosController::class, 'destroy'])->name('usuarios.destroy');
+
+        //RolesController
+        Route::get('/role', [RolesController::class, 'index'])->name('role.index');
+        Route::get('/role/show', [RolesController::class, 'showDataTable'])->name('role.show');
+        Route::get('/role/create', [RolesController::class, 'create'])->name('role.create');
+        Route::post('/role', [RolesController::class, 'store'])->name('role.store');
+        Route::get('/role/{id}/edit', [RolesController::class, 'edit'])->name('role.edit');
+        Route::put('/role/{id}', [RolesController::class, 'update'])->name('role.update');
+        Route::delete('/role/{id}', [RolesController::class, 'destroy'])->name('role.destroy');
 
     });
 

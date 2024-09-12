@@ -15,16 +15,9 @@
 <x-app-layout>
     <form method="POST" action="{{ route('register.store') }}">
         @csrf
-        <!-- Rut -->
-        <div>
-            <x-input-label for="rut" :value="__('Rut')" />
-            <x-text-input for="rut" class="block mt-1 w-full" type="text" name="rut" :value="old('rut')" required autofocus autocomplete="rut" placeholder="11111111-1"/>
-            <x-input-error :messages="$errors->get('rut')" class="mt-2" />
-        </div>
-
         <!-- Name -->
         <div class="mt-4">
-            <x-input-label for="name" :value="__('Nombre Proveedor')" />
+            <x-input-label for="name" :value="__('Nombre')" />
             <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autocomplete="name" />
             <x-input-error :messages="$errors->get('name')" class="mt-2" />
         </div>

@@ -16,15 +16,9 @@
     <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
         @csrf
         @method('patch')
-        
-        <div>
-            <x-input-label for="rut" :value="__('Rut')" />
-            <x-text-input id="rut" name="rut" type="text" class="mt-1 block w-full" :value="old('name', $user->rut)" required autofocus autocomplete="rut" readonly />
-            <x-input-error class="mt-2" :messages="$errors->get('rut')"/>
-        </div>
 
         <div>
-            <x-input-label for="name" :value="__('Nombre Proveedor')" />
+            <x-input-label for="name" :value="__('Nombre')" />
             <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required  autocomplete="name" readonly />
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>

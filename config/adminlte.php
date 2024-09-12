@@ -330,6 +330,18 @@ return [
                         'icon' => 'fas fa-users',
                         'can' => 'admin-only',
                     ],
+                    [
+                        'text' => 'Crear Rol',
+                        'route' => 'role.create',
+                        'icon' => 'fa fa-server',
+                        'can' => 'admin-only',
+                    ],
+                    [
+                        'text' => 'Ver Rol',
+                        'route' => 'role.index',
+                        'icon' => 'fa fa-server',
+                        'can' => 'admin-only',
+                    ],
                 ],
             ],
 

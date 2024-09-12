@@ -16,8 +16,7 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>RUT</th>
-                                    <th>Nombre Proveedor</th>
+                                    <th>Nombre</th>
                                     <th>Email</th>
                                     <th>Fecha de Creación</th>
                                     <th>Fecha de Actualización</th>
@@ -28,7 +27,6 @@
                                 @foreach($usuarios as $usuario)
                                     <tr>
                                         <td>{{ $usuario->id }}</td>
-                                        <td>{{ $usuario->rut }}</td>
                                         <td>{{ $usuario->name }}</td>
                                         <td>{{ $usuario->email }}</td>
                                         <td>{{ $usuario->created_at->format('d-m-Y') }}</td>
