@@ -88,7 +88,7 @@ class RolesController extends Controller
     {
         // Validar los datos del formulario
         $validatedData = $request->validate([
-            'name' => 'required|string|min:4|max:255|unique:roles,name,' . $id, // Ignora el ID actual del rol para la validación de unicidad
+            'name' => 'required|string|min:4|max:255|unique:roles,name,' . $id,
         ]);
 
         // Asignar el valor de 'name' a 'guard_name'
@@ -96,8 +96,6 @@ class RolesController extends Controller
 
         // Encontrar el rol por su ID
         $role = Role::findOrFail($id);
-
-     //   dd($validatedData);
 
         // Actualizar el rol con los datos validados
         $role->update($validatedData);

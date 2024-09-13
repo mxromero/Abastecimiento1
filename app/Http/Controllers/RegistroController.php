@@ -27,7 +27,7 @@ class RegistroController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email',
-            'role_id' => 'required|exists:roles,id', // Asumiendo que tienes una tabla roles
+            'role_id' => 'required|exists:roles,id',
         ]);
 
            // Generar una contraseña temporal

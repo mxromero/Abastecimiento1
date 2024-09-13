@@ -39,12 +39,11 @@ class UserRegistered extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-                ->subject('Bienvenido al Portal de Productores')
+                ->subject('Bienvenido al Portal de Planta Salsa & Ketchup')
                 ->greeting('Hola ' . $this->user->name)
-                ->line('¡Bienvenido a nuestra comunidad de productores! Nos complace informarle que su perfil ha sido creado exitosamente en nuestro portal de productores.')
+                ->line('¡Bienvenido a nuestra planta de salsa y ketchup! Nos complace confirmar que su registro como usuario ha sido completado con éxito. ¡Esperamos que disfrute de su experiencia en nuestro sistema.!')
                 ->line('Con los siguientes datos:')
                 ->line('Nombre: ' . $this->user->name)
-                ->line('RUT: ' . $this->user->rut)
                 ->line('Email: ' . $this->user->email)
                 ->line('Contraseña temporal: ' . $this->temporaryPassword)
                 ->line('Por favor, cambie su contraseña la primera vez que inicie sesión.')
